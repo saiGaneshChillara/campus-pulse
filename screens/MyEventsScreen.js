@@ -15,10 +15,10 @@ import EventCard from "../components/EventCard";
 import Loader from '../components/Loader';
 
 const MyEventsScreen = ({ route, navigation }) => {
-  const { category } = route.params || {}; // Undefined if no category is passed
+  const { category } = route.params || {};
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [screenTitle, setScreenTitle] = useState("My Events"); // Dynamic titleif
+  const [screenTitle, setScreenTitle] = useState("My Events");
 
   const fetchEvents = async () => {
     setLoading(true);
@@ -32,7 +32,6 @@ const MyEventsScreen = ({ route, navigation }) => {
 
       let eventDocs;
       if (category) {
-        // Mode 1: Fetch all events of the specified category
         const categoryQuery = query(
           collection(firestore, "events"),
           where("category", "==", category)
@@ -44,7 +43,6 @@ const MyEventsScreen = ({ route, navigation }) => {
         }));
         setScreenTitle(`Events in ${category}`);
       } else {
-        // Mode 2: Fetch registered events for the user
         const registrationsQuery = query(
           collection(firestore, "registrations"),
           where("userId", "==", user.uid)
@@ -73,22 +71,21 @@ const MyEventsScreen = ({ route, navigation }) => {
 
       setEvents(eventDocs);
 
-      // Reminder logic only for registered events (not category view)
       if (!category) {
         const now = new Date();
         const tomorrow = new Date(now);
         tomorrow.setDate(now.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0); // Start of tomorrow
+        tomorrow.setHours(0, 0, 0, 0);
         const endOfTomorrow = new Date(tomorrow);
-        endOfTomorrow.setDate(tomorrow.getDate() + 1); // End of tomorrow
+        endOfTomorrow.setDate(tomorrow.getDate() + 1);
 
         for (const event of eventDocs) {
-          const [startTimeStr] = event.time.split(" - "); // e.g., "2:00 PM"
+          const [startTimeStr] = event.time.split(" - ");
           const eventDateTime = new Date(`${event.date} ${startTimeStr}`);
           if (
             eventDateTime >= tomorrow &&
             eventDateTime < endOfTomorrow &&
-            !event.reminderSent // Optional: Avoid duplicate reminders
+            !event.reminderSent
           ) {
             await addDoc(collection(firestore, "notifications"), {
               userId: user.uid,
@@ -98,8 +95,6 @@ const MyEventsScreen = ({ route, navigation }) => {
               timestamp: new Date(),
               read: false,
             });
-            // Optionally update event with reminderSent: true
-            // await updateDoc(doc(firestore, 'events', event.id), { reminderSent: true });
           }
         }
       }
@@ -113,7 +108,7 @@ const MyEventsScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     fetchEvents();
-  }, [category]); // Re-run when category changes
+  }, [category]);
 
   if (loading) {
     return <Loader />;
@@ -138,7 +133,7 @@ const MyEventsScreen = ({ route, navigation }) => {
               time={item.time}
               location={item.location}
               image={item.image}
-              status={category ? undefined : "Registered"} // Only show status for registered events
+              status={category ? undefined : "Registered"}
               onPress={() => navigation.navigate("EventDetails", { event: item })}
             />
           )}

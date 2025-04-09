@@ -9,10 +9,10 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  Touchable,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Button from "../components/Button";
 import Header from "../components/Header";
 import Input from "../components/Input";
@@ -20,7 +20,6 @@ import Loader from "../components/Loader";
 import { auth, firestore } from "../firebase/firebaseConfig";
 import { categories as staticCats } from "../static/categories";
 import { uploadImageToCloudinary } from "../utils/cloudinary";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const CreateEventScreen = ({ navigation }) => {
   const [title, setTitle] = useState("");
@@ -37,6 +36,7 @@ const CreateEventScreen = ({ navigation }) => {
   const [category, setCategory] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [paymentScannerImage, setPaymentScannerIamge] = useState(null);
 
   const [categories] = useState(staticCats);
 
@@ -56,6 +56,25 @@ const CreateEventScreen = ({ navigation }) => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+    }
+  };
+
+  const pickPaymentScannerImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setPaymentScannerIamge(result.assets[0].uri);
     }
   };
 
@@ -119,9 +138,15 @@ const CreateEventScreen = ({ navigation }) => {
       }
 
       let imageUrl = "";
+      let paymentScannerImageUrl = "";
       if (image) {
         imageUrl = await uploadImageToCloudinary(image);
       }
+
+      if (paymentScannerImage) {
+        paymentScannerImageUrl = await uploadImageToCloudinary(paymentScannerImage);
+      }
+
 
       await addDoc(collection(firestore, "events"), {
         title,
@@ -131,6 +156,7 @@ const CreateEventScreen = ({ navigation }) => {
         fee: parseFloat(fee) || 0,
         description,
         image: imageUrl,
+        paymentScannerImage: paymentScannerImageUrl,
         category,
         creator: currentUser.uid,
         trending: false,
@@ -271,6 +297,11 @@ const CreateEventScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
             <Text style={styles.uploadText}>
               {image ? "Event Image Uploaded" : "Upload Event Image"}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.uploadButton} onPress={pickPaymentScannerImage}>
+            <Text style={styles.uploadText}>
+              {paymentScannerImage ? "Event image uploaded" : "Upload event image"}
             </Text>
           </TouchableOpacity>
           <Button title={"Create Event"} onPress={handleCreateEvent} />

@@ -58,7 +58,6 @@ const LoginScreen = ({ navigation }) => {
       </View>
       <Button
         title="Continue with Google"
-        colors={["orange", "yellow"]}
         style={styles.googleButton}
         onPress={() => alert('Google Sign-In not implemented')}
       >

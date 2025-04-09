@@ -59,7 +59,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       fetchEvents();
-      fetchUnreadNotifications(); // Refresh unread count on focus
+      fetchUnreadNotifications(); // Refresh unread count 
     });
 
     return unsubscribe;

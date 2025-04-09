@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, View, ActivityIndicator } from 'react-native';
+import { collection, getDocs, query, where } from 'firebase/firestore'; // Firestore query functions
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import Button from '../components/Button';
 import CategoryCard from '../components/CategoryCard';
 import { firestore } from '../firebase/firebaseConfig'; // Import Firestore instance
-import { collection, query, where, getDocs } from 'firebase/firestore'; // Firestore query functions
 
 const CategoriesScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([
@@ -16,7 +16,7 @@ const CategoriesScreen = ({ navigation }) => {
     { id: '7', title: 'Volunteering', icon: 'volunteer-activism', color: '#4DD0E1' },
     { id: '8', title: 'Clubs & Organizations', icon: 'flag', color: '#BA68C8' },
   ]);
-  
+
   const [categoryCounts, setCategoryCounts] = useState({});
   const [loading, setLoading] = useState(true);
 

@@ -19,6 +19,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import SplashScreen from '../screens/SplashScreen';
+import PaymentScreen from '../screens/PaymentScreen';
+import PaymentOverviewScreen from '../screens/PaymentOverviewScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -121,6 +123,16 @@ const AppNavigator = () => {
         <Stack.Screen
           name='ModifyEvent'
           component={ModifyEventScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='PaymentScreen'
+          component={PaymentScreen}
+          options={{ headerShown:false }}
+        />
+        <Stack.Screen 
+          name="PaymentOverView"
+          component={PaymentOverviewScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

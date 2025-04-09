@@ -13,6 +13,7 @@ import Header from "../components/Header";
 import Input from "../components/Input";
 import { auth, firestore } from "../firebase/firebaseConfig";
 import Loader from '../components/Loader';
+import axiosInstance from '../utils/axiosInstance';
 
 const EventRegistrationScreen = ({ route, navigation }) => {
   const { event } = route.params;
@@ -22,6 +23,16 @@ const EventRegistrationScreen = ({ route, navigation }) => {
   const [collegeName, setCollegeName] = useState("");
   const [yearsOfStudy, setYearsOfStudy] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const checkPaymentStatus = async () => {
+    const curentUser = auth.currentUser;
+    if (!curentUser) return false;
+
+    const response = await axiosInstance.get(`/payments/check/${curentUser.uid}/${event.id}`);
+    return response.data.hasPayment;
+  };
+
+
 
   const handleRegister = async () => {
     try {
@@ -46,6 +57,13 @@ const EventRegistrationScreen = ({ route, navigation }) => {
         return;
       }
 
+      const hasPayment = await checkPaymentStatus();
+      if (event.fee > 0 && !hasPayment) {
+        alert("Please pay the registration fee first.");
+        navigation.navigat("PaymentScreen", { event });
+        return;
+      }
+
       await addDoc(collection(firestore, "registrations"), {
         eventId: event.id,
         userId: currentUser.uid,
@@ -63,6 +81,10 @@ const EventRegistrationScreen = ({ route, navigation }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePay = () => {
+    navigation.navigate("PaymentScreen", { event });
   };
 
   if (loading) {
@@ -115,7 +137,7 @@ const EventRegistrationScreen = ({ route, navigation }) => {
             onChangeText={setYearsOfStudy}
           />
           <Text style={styles.fee}>Registration Fee: ${event.fee}</Text>
-          <Button title={"Pay Now"} colors={["#00c853", "#00e676"]} onPress={handleRegister} />
+          <Button title={"Pay Now"} colors={["#00c853", "#00e676"]} onPress={handlePay} />
           <View style={styles.paymentInfo}>
             <MaterialIcons name="lock" size={16} color={"#666"} />
             <Text style={styles.paymentText}>Secure Payment by Campus Pulse</Text>

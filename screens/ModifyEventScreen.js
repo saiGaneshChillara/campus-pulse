@@ -107,6 +107,7 @@ const ModifyEventScreen = ({ route, navigation }) => {
   const [description, setDescription] = useState(event.description || "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [paymentScanneImage, setPaymentScannerImage] = useState(event.paymentScannerImage || "")
 
   const formatDate = (date) => {
     return date.toLocaleString("en-US", {
@@ -158,12 +159,37 @@ const ModifyEventScreen = ({ route, navigation }) => {
     }
   };
 
+  const pickPaymentScanneImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionAsync();
+    if (status !== 'granted') {
+      alert("Sorry we need camera permission to make this work");
+      reutrn;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setPaymentScannerImage(result.assets[0]);
+    }
+  };
+
+
+
   const handleModifyEvent = async () => {
     try {
       setLoading(true);
       let imageUrl = image;
-      if (image !== event.image) {
+      let paymentScannerImageUrl = paymentScanneImage;
+      if (image !== event.image && image) {
         imageUrl = await uploadImageToCloudinary(image);
+      }
+      if (paymentScanneImage !== event.paymentScannerImage && paymentScanneImage) {
+        paymentScanneImageUrl = await uploadImageToCloudinary(paymentScanneImage);
       }
 
       // Update the event document
@@ -174,6 +200,7 @@ const ModifyEventScreen = ({ route, navigation }) => {
         location,
         fee: parseFloat(fee) || 0,
         image: imageUrl,
+        paymentScannerImage: paymentScanneImageUrl,
         category,
         description,
       });
@@ -363,6 +390,11 @@ const ModifyEventScreen = ({ route, navigation }) => {
           <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
             <Text style={styles.uploadText}>
               {image ? "Event Image Uploaded" : "Upload Event Image"}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.uploadButton} onPress={pickPaymentScanneImage}>
+            <Text style={styles.uploadText}>
+              {paymentScanneImage ? "Payment Scanner uploaded" : "Upload Payment Scanner Image"}
             </Text>
           </TouchableOpacity>
           <Button title={"Modify Event"} onPress={handleModifyEvent} />
