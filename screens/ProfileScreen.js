@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  Linking,
   StyleSheet,
   Text,
   View,
@@ -85,6 +86,20 @@ const ProfileScreen = ({ navigation }) => {
     fetchProfileData();
   }, []);
 
+  const handleViewCertificate = (event) => {
+    const currentUserId = auth.currentUser.uid;
+    if (!currentUserId) {
+      console.log("User not logged in");
+      return;
+    }
+    console.log("UserID is: ", currentUserId);
+    console.log("Event id is: ", event.id);
+    // return;
+    const baseUrl = axiosInstance.defaults.baseURL;
+    const url = `${baseUrl}/download-certificate/${currentUserId}/${event.id}`;
+    Linking.openURL(url).catch((err) => console.log("Error in opening the url: ", err));
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -130,7 +145,7 @@ const ProfileScreen = ({ navigation }) => {
             location={item.location}
             image={item.image}
             status="Registered"
-            onPress={() => alert("View Certificate")}
+            onPress={() => handleViewCertificate(item)}
           />
         )}
         keyExtractor={(item) => item.id}

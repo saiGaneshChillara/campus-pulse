@@ -1,11 +1,10 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Button from '../components/Button';
 import EventCard from '../components/EventCard';
 import TrendingEventCard from '../components/TrendingEventCard';
-import { auth, firestore } from '../firebase/firebaseConfig';
+import { auth } from '../firebase/firebaseConfig';
 import axiosInstance from '../utils/axiosInstance';
 
 const HomeScreen = ({ navigation }) => {
@@ -92,11 +91,11 @@ const HomeScreen = ({ navigation }) => {
         </View>
         <Text style={styles.date}>{formattedDate}</Text>
         <View style={styles.tabs}>
-          <Button title="All Events" style={styles.tabButton} />
-          <Button 
-            title="Registrations" 
-            style={styles.tabButton} 
-            onPress={() => navigation.navigate("MyEvents")} 
+          <Button title="All Events" style={styles.tabButton} onPress={() => navigation.navigate("AllEvents")} />
+          <Button
+            title="Registrations"
+            style={styles.tabButton}
+            onPress={() => navigation.navigate("MyEvents")}
           />
           <Button
             title="Create Event"
