@@ -22,6 +22,7 @@ import SplashScreen from '../screens/SplashScreen';
 import PaymentScreen from '../screens/PaymentScreen';
 import PaymentOverviewScreen from '../screens/PaymentOverviewScreen';
 import AllEventsScreen from '../screens/AllEventsScreen';
+import ProfileEventsScreen from '../screens/ProfileEventsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -139,6 +140,11 @@ const AppNavigator = () => {
         <Stack.Screen 
           name="AllEvents"
           component={AllEventsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="ProfileEvents"
+          component={ProfileEventsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

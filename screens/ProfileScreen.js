@@ -1,25 +1,17 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   Image,
   Linking,
+  Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import Button from "../components/Button";
 import ProfileEventCard from "../components/ProfileEventCard";
-import { auth, firestore } from "../firebase/firebaseConfig";
+import { auth } from "../firebase/firebaseConfig";
 import axiosInstance from "../utils/axiosInstance";
 
 // Function to convert string date to Date object for comparison
@@ -44,47 +36,81 @@ const ProfileScreen = ({ navigation }) => {
   const [eventHistory, setEventHistory] = useState(0);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [createdEventsToBeRendered, setCreatedEventsToBeRendered] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+  const [registeredEvents, setRegisteredEvents] = useState([]);
 
   useEffect(() => {
+    let isMounted = true; // To avoid setting state on unmounted component
+  
     const fetchProfileData = async () => {
       setLoading(true);
+  
       try {
         const user = auth.currentUser;
         if (!user) {
           console.log("No user is logged in");
-          setLoading(false);
           return;
         }
+  
         const uid = user.uid;
-
-        const userResponse = await axiosInstance.get(`/user/profile/${uid}`);
+  
+        // Fetch user profile, created events, and registered events in parallel
+        const [userResponse, regCountResponse, eventsResponse] = await Promise.all([
+          axiosInstance.get(`/user/profile/${uid}`),
+          axiosInstance.get(`/events/registered/${uid}`),
+          axiosInstance.get(`/events/created/${uid}`)
+        ]);
+  
+        if (!isMounted) return;
+  
+        // Set user profile
         setUserData(userResponse.data);
         console.log(userResponse.data, "this is user data");
-
-        const regCountRespone = await axiosInstance.get(`/events/registered/${uid}`);
-        setRegistrations(regCountRespone.data.events.length);
-
-        const eventsResponse = await axiosInstance.get(`/events/created/${uid}`);
-        setCreatedEvents(eventsResponse.data.createdCount);
-        setEventHistory(eventsResponse.data.eventHistory);
-
+  
+        // Set registration count
+        setRegistrations(regCountResponse.data?.events?.length || 0);
+  
+        // Set event creation related data
+        const createdData = eventsResponse.data;
+        setEventHistory(createdData.eventHistory || 0);
+        setCreatedEvents(createdData.createdEvents?.length || 0);
+        setCreatedEventsToBeRendered(createdData.createdEvents || []);
+        setPastEvents(createdData.pastEvents || []);
+  
+        // Setup polling for registered events
         const fetchRegisteredEvents = async () => {
-          const regEventResponse = await axiosInstance.get(`/events/registered/${uid}`);
-          setEvents(regEventResponse.data.events);
+          try {
+            const regEventResponse = await axiosInstance.get(`/events/registered/${uid}`);
+            if (!isMounted) return;
+            setEvents(regEventResponse.data?.events || []);
+            setRegisteredEvents(regEventResponse.data?.events || []);
+          } catch (err) {
+            console.log("Error fetching registered events:", err);
+          }
         };
-        fetchRegisteredEvents();
+  
+        await fetchRegisteredEvents(); // Initial fetch
+  
         const interval = setInterval(fetchRegisteredEvents, 5000);
-        return () => clearInterval(interval);
+  
+        // Cleanup interval on unmount
+        return () => {
+          isMounted = false;
+          clearInterval(interval);
+        };
       } catch (err) {
-        console.log("Error fetching profile data: ", err);
-        setLoading(false);
+        console.log("Error fetching profile data:", err);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
-
+  
     fetchProfileData();
   }, []);
+  
+
+  // console.log("Created evetns are", createdEventsToBeRendered);
 
   const handleViewCertificate = (event) => {
     const currentUserId = auth.currentUser.uid;
@@ -122,18 +148,29 @@ const ProfileScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.stats}>
-        <View style={styles.stat}>
+        <Pressable
+          style={styles.stat}
+          onPress={() => navigation.navigate("ProfileEvents", { events: registeredEvents, title: "Registered Events" })}
+        >
           <Text style={styles.statNumber}>{registrations}</Text>
           <Text style={styles.statLabel}>My Registrations</Text>
-        </View>
-        <View style={styles.stat}>
+        </Pressable>
+
+        <Pressable
+          style={styles.stat}
+          onPress={() => navigation.navigate("ProfileEvents", { events: createdEventsToBeRendered, title: "Created Events" })}
+        >
           <Text style={styles.statNumber}>{createdEvents}</Text>
           <Text style={styles.statLabel}>Created Events</Text>
-        </View>
-        <View style={styles.stat}>
+        </Pressable>
+
+        <Pressable
+          style={styles.stat}
+          onPress={() => navigation.navigate("ProfileEvents", { events: pastEvents, title: "Event History" })}
+        >
           <Text style={styles.statNumber}>{eventHistory}</Text>
           <Text style={styles.statLabel}>Event History</Text>
-        </View>
+        </Pressable>
       </View>
       <FlatList
         data={events}

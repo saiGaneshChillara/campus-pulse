@@ -2,7 +2,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { auth, firestore } from '../firebase/firebaseConfig';
 
 const SettingsScreen = ({ navigation }) => {
@@ -36,14 +36,14 @@ const SettingsScreen = ({ navigation }) => {
   const handleSignOut = async () => {
     try {
       await auth.signOut();
-      navigation.replace('Main');
+      navigation.replace('Login');
     } catch (err) {
       console.error('Error signing out:', err);
     }
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image source={{ uri: profileImage }} style={styles.profileImage} />
         <Text style={styles.name}>{userName}</Text>
@@ -51,7 +51,7 @@ const SettingsScreen = ({ navigation }) => {
           <Text style={styles.editProfile}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <Text style={styles.sectionTitle}>Notifications</Text>
         <View style={styles.setting}>
           <Text style={styles.settingText}>Push Notifications</Text>
@@ -85,8 +85,8 @@ const SettingsScreen = ({ navigation }) => {
             trackColor={{ false: '#ddd', true: '#4CAF50' }}
           />
         </View>
-      </View>
-      <View style={styles.section}>
+      </View> */}
+      {/* <View style={styles.section}>
         <Text style={styles.sectionTitle}>Calendar</Text>
         <TouchableOpacity style={styles.setting}>
           <Text style={styles.settingText}>Sync Calendar</Text>
@@ -96,7 +96,7 @@ const SettingsScreen = ({ navigation }) => {
           <Text style={styles.settingText}>Connected Accounts</Text>
           <MaterialIcons name="chevron-right" size={24} color="#666" />
         </TouchableOpacity>
-      </View>
+      </View> */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
         <TouchableOpacity style={styles.setting}>
@@ -139,7 +139,7 @@ const SettingsScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.signOut} onPress={handleSignOut}>
         <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
