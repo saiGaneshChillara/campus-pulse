@@ -42,42 +42,42 @@ const ProfileScreen = ({ navigation }) => {
 
   useEffect(() => {
     let isMounted = true; // To avoid setting state on unmounted component
-  
+
     const fetchProfileData = async () => {
       setLoading(true);
-  
+
       try {
         const user = auth.currentUser;
         if (!user) {
           console.log("No user is logged in");
           return;
         }
-  
+
         const uid = user.uid;
-  
+
         // Fetch user profile, created events, and registered events in parallel
         const [userResponse, regCountResponse, eventsResponse] = await Promise.all([
           axiosInstance.get(`/user/profile/${uid}`),
           axiosInstance.get(`/events/registered/${uid}`),
           axiosInstance.get(`/events/created/${uid}`)
         ]);
-  
+
         if (!isMounted) return;
-  
+
         // Set user profile
         setUserData(userResponse.data);
         console.log(userResponse.data, "this is user data");
-  
+
         // Set registration count
         setRegistrations(regCountResponse.data?.events?.length || 0);
-  
+
         // Set event creation related data
         const createdData = eventsResponse.data;
         setEventHistory(createdData.eventHistory || 0);
         setCreatedEvents(createdData.createdEvents?.length || 0);
         setCreatedEventsToBeRendered(createdData.createdEvents || []);
         setPastEvents(createdData.pastEvents || []);
-  
+
         // Setup polling for registered events
         const fetchRegisteredEvents = async () => {
           try {
@@ -89,11 +89,11 @@ const ProfileScreen = ({ navigation }) => {
             console.log("Error fetching registered events:", err);
           }
         };
-  
+
         await fetchRegisteredEvents(); // Initial fetch
-  
+
         const interval = setInterval(fetchRegisteredEvents, 5000);
-  
+
         // Cleanup interval on unmount
         return () => {
           isMounted = false;
@@ -105,10 +105,10 @@ const ProfileScreen = ({ navigation }) => {
         if (isMounted) setLoading(false);
       }
     };
-  
+
     fetchProfileData();
-  }, []);
-  
+  }, [navigation]);
+
 
   // console.log("Created evetns are", createdEventsToBeRendered);
 

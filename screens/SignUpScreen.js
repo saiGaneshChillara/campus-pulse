@@ -16,6 +16,8 @@ const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [collegeName, setCollegeName] = useState('');
+  const [yearsOfStudy, setYearsOfStudy] = useState('');
   const [collegeId, setCollegeId] = useState(null);
   const [collegeIdUrl, setCollegeIdUrl] = useState('');
   const [error, setError] = useState('');
@@ -56,6 +58,8 @@ const SignUpScreen = ({ navigation }) => {
       await setDoc(doc(firestore, 'users', userCredential.user.uid), {
         fullName,
         email,
+        collegeName,
+        yearsOfStudy,
         collegeId: collegeIdUrl,
       });
 
@@ -90,6 +94,18 @@ const SignUpScreen = ({ navigation }) => {
         icon="email"
         value={email}
         onChangeText={setEmail}
+      />
+      <Input 
+        placeholder={'Enter college name'}
+        icon={''}
+        value={collegeName}
+        onChangeText={setCollegeName}
+      />
+      <Input 
+        placeholder={'Enter year of study'}
+        icon={''}
+        value={yearsOfStudy}
+        onChangeText={setYearsOfStudy}
       />
       <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
         <Text style={styles.uploadText}>

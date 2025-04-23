@@ -6,8 +6,8 @@ import { Image, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } f
 import { auth, firestore } from '../firebase/firebaseConfig';
 
 const SettingsScreen = ({ navigation }) => {
-  const [userName, setUserName] = useState('John Smith');
-  const [profileImage, setProfileImage] = useState('https://res.cloudinary.com/dpfrwxe1r/image/upload/v1743422310/WIN_20250311_12_13_51_Pro_ueu367.jpg');
+  const [userName, setUserName] = useState('');
+  const [profileImage, setProfileImage] = useState('');
   const [pushNotifications, setPushNotifications] = useState(true);
 
   const [emailNotifications, setEmailNotifications] = useState(false);
@@ -22,7 +22,7 @@ const SettingsScreen = ({ navigation }) => {
           const userDoc = await getDoc(doc(firestore, 'users', user.uid));
           if (userDoc.exists()) {
             setUserName(userDoc.data().fullName);
-            setProfileImage(userDoc.data().collegeId || 'https://res.cloudinary.com/dpfrwxe1r/image/upload/v1743422310/WIN_20250311_12_13_51_Pro_ueu367.jpg');
+            setProfileImage(userDoc.data().collegeId);
           }
         }
       } catch (err) {
@@ -47,7 +47,7 @@ const SettingsScreen = ({ navigation }) => {
       <View style={styles.header}>
         <Image source={{ uri: profileImage }} style={styles.profileImage} />
         <Text style={styles.name}>{userName}</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
           <Text style={styles.editProfile}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
@@ -99,38 +99,38 @@ const SettingsScreen = ({ navigation }) => {
       </View> */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
-        <TouchableOpacity style={styles.setting}>
+        <TouchableOpacity style={styles.setting} onPress={() => navigation.navigate("EditProfile")}>
           <Text style={styles.settingText}>Personal Information</Text>
           <MaterialIcons name="chevron-right" size={24} color="#666" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.setting}>
+        <TouchableOpacity style={styles.setting} onPress={() => navigation.navigate('EditProfile')}>
           <Text style={styles.settingText}>Password & Security</Text>
           <MaterialIcons name="chevron-right" size={24} color="#666" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.setting}>
+        {/* <TouchableOpacity style={styles.setting}>
           <Text style={styles.settingText}>Language</Text>
           <MaterialIcons name="chevron-right" size={24} color="#666" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.setting}>
           <Text style={styles.settingText}>Privacy Settings</Text>
           <MaterialIcons name="chevron-right" size={24} color="#666" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Support</Text>
-        <TouchableOpacity style={styles.setting}>
+        <TouchableOpacity style={styles.setting} onPress={() => navigation.navigate('HelpCenter')}>
           <Text style={styles.settingText}>Help Center</Text>
           <MaterialIcons name="chevron-right" size={24} color="#666" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.setting}>
+        <TouchableOpacity style={styles.setting} onPress={() => navigation.navigate('ContactSupport')}>
           <Text style={styles.settingText}>Contact Support</Text>
           <MaterialIcons name="chevron-right" size={24} color="#666" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.setting}>
+        <TouchableOpacity style={styles.setting} onPress={() => navigation.navigate('TermsOfService')}>
           <Text style={styles.settingText}>Terms of Service</Text>
           <MaterialIcons name="chevron-right" size={24} color="#666" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.setting}>
+        <TouchableOpacity style={styles.setting} onPress={() => navigation.navigate('PrivacyPolicy')}>
           <Text style={styles.settingText}>Privacy Policy</Text>
           <MaterialIcons name="chevron-right" size={24} color="#666" />
         </TouchableOpacity>

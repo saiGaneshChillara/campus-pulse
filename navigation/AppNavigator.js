@@ -23,6 +23,11 @@ import PaymentScreen from '../screens/PaymentScreen';
 import PaymentOverviewScreen from '../screens/PaymentOverviewScreen';
 import AllEventsScreen from '../screens/AllEventsScreen';
 import ProfileEventsScreen from '../screens/ProfileEventsScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
+import HelpCenterScreen from '../screens/suport/HelpCenterScreen';
+import ContactSupportScreen from '../screens/suport/ContactSupportScreen';
+import TermsOfServiceScreen from '../screens/suport/TermsOfServiceScreen';
+import PrivacyPolicyScreen from '../screens/suport/PrivacyPolicyScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -145,6 +150,31 @@ const AppNavigator = () => {
         <Stack.Screen 
           name="ProfileEvents"
           component={ProfileEventsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="EditProfile"
+          component={EditProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='HelpCenter'
+          component={HelpCenterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='ContactSupport'
+          component={ContactSupportScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='TermsOfService'
+          component={TermsOfServiceScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='PrivacyPolicy'
+          component={PrivacyPolicyScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
