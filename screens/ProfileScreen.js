@@ -111,6 +111,7 @@ const ProfileScreen = ({ navigation }) => {
 
 
   // console.log("Created evetns are", createdEventsToBeRendered);
+  // console.log("Regisetered events")
 
   const handleViewCertificate = (event) => {
     const currentUserId = auth.currentUser.uid;

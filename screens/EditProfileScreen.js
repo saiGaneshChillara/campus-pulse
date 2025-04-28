@@ -174,7 +174,7 @@ const EditProfileScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity style={styles.uploadButton} onPress={pickCollegeId}>
         <Text style={styles.uploadText}>
-          {collegeId || collegeIdUrl ? 'College ID uploaded' : 'Upload College ID Card'}
+          {collegeId || collegeIdUrl ? 'Profile uploaded' : 'Upload Profile'}
         </Text>
       </TouchableOpacity>
       <Input
