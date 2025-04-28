@@ -159,7 +159,7 @@ const CreateEventScreen = ({ navigation }) => {
         paymentScannerImage: paymentScannerImageUrl,
         category,
         creator: currentUser.uid,
-        trending: false,
+        trending: Math.random() <= 0.3,
       });
       navigation.goBack();
     } catch (err) {
