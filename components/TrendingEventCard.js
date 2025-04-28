@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   container: {
     width: 250,
     height: 400,
-    backgroundColor: 'green',
+    backgroundColor: '#00ceff',
     borderRadius: 15,
     marginRight: 15,
     overflow: 'hidden',

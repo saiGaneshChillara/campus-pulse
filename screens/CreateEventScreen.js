@@ -301,7 +301,7 @@ const CreateEventScreen = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.uploadButton} onPress={pickPaymentScannerImage}>
             <Text style={styles.uploadText}>
-              {paymentScannerImage ? "Event image uploaded" : "Upload event image"}
+              {paymentScannerImage ? "Scanner image uploaded" : "Upload scanner image"}
             </Text>
           </TouchableOpacity>
           <Button title={"Create Event"} onPress={handleCreateEvent} />

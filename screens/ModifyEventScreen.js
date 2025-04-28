@@ -189,7 +189,7 @@ const ModifyEventScreen = ({ route, navigation }) => {
         imageUrl = await uploadImageToCloudinary(image);
       }
       if (paymentScanneImage !== event.paymentScannerImage && paymentScanneImage) {
-        paymentScanneImageUrl = await uploadImageToCloudinary(paymentScanneImage);
+        paymentScannerImageUrl = await uploadImageToCloudinary(paymentScanneImage);
       }
 
       // Update the event document
@@ -200,7 +200,7 @@ const ModifyEventScreen = ({ route, navigation }) => {
         location,
         fee: parseFloat(fee) || 0,
         image: imageUrl,
-        paymentScannerImage: paymentScanneImageUrl,
+        paymentScannerImage: paymentScannerImageUrl,
         category,
         description,
       });

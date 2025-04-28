@@ -1,15 +1,14 @@
 // screens/SignUpScreen.js
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { auth, firestore } from '../firebase/firebaseConfig';
+import * as ImagePicker from 'expo-image-picker';
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import the new method
 import { doc, setDoc } from 'firebase/firestore'; // Import Firestore methods
-import { uploadImageToCloudinary } from '../utils/cloudinary';
-import Input from '../components/Input';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Button from '../components/Button';
-import * as ImagePicker from 'expo-image-picker';
-import { addSampleEvents } from '../scripts/sampleEvents';
+import Input from '../components/Input';
 import Loader from '../components/Loader';
+import { auth, firestore } from '../firebase/firebaseConfig';
+import { uploadImageToCloudinary } from '../utils/cloudinary';
 
 const SignUpScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
@@ -19,6 +18,7 @@ const SignUpScreen = ({ navigation }) => {
   const [collegeName, setCollegeName] = useState('');
   const [yearsOfStudy, setYearsOfStudy] = useState('');
   const [collegeId, setCollegeId] = useState(null);
+  const [proifle, setProfile] = useState(null);
   const [collegeIdUrl, setCollegeIdUrl] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,6 +35,21 @@ const SignUpScreen = ({ navigation }) => {
       setCollegeId(result.assets[0].uri);
     }
   };
+
+  const pickId = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [16, 9],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfile(result.assets[0].uri);
+    }
+  };
+
+
 
   const handleSignUp = async () => {
     if (password !== confirmPassword) {
@@ -95,13 +110,13 @@ const SignUpScreen = ({ navigation }) => {
         value={email}
         onChangeText={setEmail}
       />
-      <Input 
+      <Input
         placeholder={'Enter college name'}
         icon={''}
         value={collegeName}
         onChangeText={setCollegeName}
       />
-      <Input 
+      <Input
         placeholder={'Enter year of study'}
         icon={''}
         value={yearsOfStudy}
@@ -109,7 +124,12 @@ const SignUpScreen = ({ navigation }) => {
       />
       <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
         <Text style={styles.uploadText}>
-          {collegeId ? 'College ID Uploaded' : 'Upload college ID card'}
+          {collegeId ? 'Profile Image Uploaded' : 'Upload ProfileImage'}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.uploadButton} onPress={pickId}>
+        <Text style={styles.uploadText}>
+          {proifle ? 'College ID Uploaded' : 'Upload college ID card'}
         </Text>
       </TouchableOpacity>
       <Input

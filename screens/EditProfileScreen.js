@@ -3,7 +3,7 @@ import { reauthenticateWithCredential, updatePassword } from "firebase/auth";
 import { EmailAuthProvider } from "firebase/auth/web-extension";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import Loader from "../components/Loader";
@@ -38,6 +38,9 @@ const EditProfileScreen = ({ navigation }) => {
           const userData = userDoc.data();
           setFullName(userData.fullName || '');
           setCollegeIdUrl(userData.collegeId || '');
+          setCollegeName(userData.collegeName || '');
+          setYearsOfStudy(userData.yearsOfStudy || '');
+
         } else {
           setError('User data not found');
         }
@@ -124,24 +127,51 @@ const EditProfileScreen = ({ navigation }) => {
       <Text style={styles.title}>Edit Profile</Text>
       <Text style={styles.subtitle}>Update your campus profile</Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Input
+      {/* <Input
         placeholder={'Enter your full name'}
         icon={'person'}
         value={fullName}
         onChangeText={setFullName}
-      />
-      <Input
+      /> */}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Full Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder='Enter full name'
+          value={fullName}
+          onChangeText={setFullName}
+        />
+      </View>
+      {/* <Input
         placeholder={'Enter your college name'}
         // icon={'person
         value={collegeName}
         onChangeText={setCollegeName}
-      />
-      <Input
+      /> */}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>College Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your college name"
+          value={collegeName}
+          onChangeText={setCollegeName}
+        />
+      </View>
+      {/* <Input
         placeholder={'Enter your year of study'}
         // icon={'person'}
         value={yearsOfStudy}
         onChangeText={setYearsOfStudy}
-      />
+      /> */}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Year of Study</Text>
+        <TextInput 
+          style={styles.input}
+          placeholder='Enter year of study'
+          value={yearsOfStudy}
+          onChangeText={setYearsOfStudy}
+        />
+      </View>
       <TouchableOpacity style={styles.uploadButton} onPress={pickCollegeId}>
         <Text style={styles.uploadText}>
           {collegeId || collegeIdUrl ? 'College ID uploaded' : 'Upload College ID Card'}
@@ -221,6 +251,23 @@ const styles = StyleSheet.create({
     color: '#6b48ff',
     textAlign: 'center',
     marginTop: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    padding: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  inputContainer: {
+    marginVertical: 10,
   }
 });
 

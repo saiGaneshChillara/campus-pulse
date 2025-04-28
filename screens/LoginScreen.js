@@ -59,7 +59,7 @@ const LoginScreen = ({ navigation }) => {
       <Button
         title="Continue with Google"
         style={styles.googleButton}
-        onPress={() => alert('Google Sign-In not implemented')}
+        // onPress={() => alert('Google Sign-In not implemented')}
       >
         <MaterialIcons name="google" size={20} color="#DB4437" style={styles.googleIcon} />
       </Button>
