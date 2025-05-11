@@ -2,7 +2,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import the new method
 import { doc, setDoc } from 'firebase/firestore'; // Import Firestore methods
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -67,20 +67,27 @@ const SignUpScreen = ({ navigation }) => {
       }
 
       // Create user in Firebase Auth
+
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
       // Store user data in Firestore
-      await setDoc(doc(firestore, 'users', userCredential.user.uid), {
-        fullName,
-        email,
-        collegeName,
-        yearsOfStudy,
-        collegeId: collegeIdUrl,
-      });
+      if (email.split("@")[0].toLowerCase() === 'admin') {
+        await setDoc(doc(firestore, 'admins', userCredential.user.uid), {
+          fullName,
+          email,
+        });
+        navigation.replace('Admin');
+      } else {
+        await setDoc(doc(firestore, 'users', userCredential.user.uid), {
+          fullName,
+          email,
+          collegeName,
+          yearsOfStudy,
+          collegeId: collegeIdUrl,
+        });
 
-      // await addSampleEvents();
-
-      navigation.replace('Main');
+        navigation.replace('Main');
+      }
     } catch (err) {
       setError(err.message);
     } finally {

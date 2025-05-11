@@ -148,7 +148,7 @@ const CreateEventScreen = ({ navigation }) => {
       }
 
 
-      await addDoc(collection(firestore, "events"), {
+      await addDoc(collection(firestore, "tentativeEvents"), {
         title,
         date: formatDate(date),
         time: formateTime(startTime, endTime),

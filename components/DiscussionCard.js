@@ -1,7 +1,5 @@
 // components/DiscussionCard.js
-import { MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 const DiscussionCard = ({ event, date, posts }) => {
   return (
@@ -16,7 +14,7 @@ const DiscussionCard = ({ event, date, posts }) => {
             <Text style={styles.time}>{post.time}</Text>
           </View>
           <Text style={styles.message}>{post.message}</Text>
-          <View style={styles.actions}>
+          {/* <View style={styles.actions}>
             <TouchableOpacity style={styles.action}>
               <MaterialIcons name="comment" size={16} color="#666" />
               <Text style={styles.actionText}>{post.comments}</Text>
@@ -29,7 +27,7 @@ const DiscussionCard = ({ event, date, posts }) => {
               <MaterialIcons name="share" size={16} color="#666" />
               <Text style={styles.actionText}>Share</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       ))}
     </View>

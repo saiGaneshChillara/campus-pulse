@@ -28,6 +28,7 @@ import HelpCenterScreen from '../screens/suport/HelpCenterScreen';
 import ContactSupportScreen from '../screens/suport/ContactSupportScreen';
 import TermsOfServiceScreen from '../screens/suport/TermsOfServiceScreen';
 import PrivacyPolicyScreen from '../screens/suport/PrivacyPolicyScreen';
+import AdminScreen from '../screens/AdminScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -175,6 +176,11 @@ const AppNavigator = () => {
         <Stack.Screen 
           name='PrivacyPolicy'
           component={PrivacyPolicyScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name='Admin'
+          component={AdminScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

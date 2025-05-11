@@ -18,6 +18,10 @@ const LoginScreen = ({ navigation }) => {
     try {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password); // Updated method
+      if (email.split("@")[0].toLowerCase() === 'admin') {
+        navigation.replace('Admin');
+        return;
+      }
       navigation.replace('Main');
     } catch (err) {
       setError(err.message);

@@ -66,7 +66,6 @@
 // export default TrendingEventCard;
 
 import { MaterialIcons } from "@expo/vector-icons";
-import React from "react";
 import {
   Image,
   StyleSheet,
@@ -75,7 +74,7 @@ import {
   View,
 } from "react-native";
 
-const TrendingEventCard = ({ title, date, time, location, image, onPress }) => { 
+const TrendingEventCard = ({ title, date, time, location, image, onPress }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={{ uri: image }} style={styles.image} />
@@ -99,8 +98,8 @@ const TrendingEventCard = ({ title, date, time, location, image, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 250,
-    height: 400,
+    width: 275,
+    height: 250,
     backgroundColor: '#00ceff',
     borderRadius: 15,
     marginRight: 15,
@@ -108,12 +107,12 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 150,
+    height: "50%",
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
   },
   imageText: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
     paddingVertical: 5,
   },
   imageTitle: {
@@ -124,10 +123,10 @@ const styles = StyleSheet.create({
   imageDate: {
     fontSize: 14,
     color: '#fff',
-    marginTop: 2,
+    marginTop: 1,
   },
   details: {
-    padding: 15,
+    padding: 5,
   },
   info: {
     flexDirection: 'row',
